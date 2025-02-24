@@ -3,6 +3,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
 from langchain_core.vectorstores.base import VectorStoreRetriever
+from dotenv import load_dotenv
+import os
 
 class ChatFAQ(ChatAIInteface):
     def __init__(self):
@@ -20,7 +22,9 @@ class ChatFAQ(ChatAIInteface):
           ("human", "{question}"),
         ]
       )
-      self.llm = ChatOpenAI(temperature=0.1)
+      load_dotenv()  # .env 파일을 로드하여 환경 변수 설정
+      openai_api_key = os.getenv("OPENAI_API_KEY")
+      self.llm = ChatOpenAI(temperature=0.1, openai_api_key=openai_api_key)
 
     def format_docs(self, docs):
       return "\n\n".join(document.page_content for document in docs)
